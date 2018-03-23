@@ -1,0 +1,106 @@
+import numpy as np
+from skimage.measure import ransac, LineModelND
+from scipy import stats
+from scipy.signal import find_peaks, peak_prominences
+import matplotlib.pyplot as plt
+
+def thickness_from_minmax(lambdas, intensities, refractive_index=1., min_peak_prominence=0.01, 
+                          method='linreg', debug=False):
+    """
+    Return the thickness from a min-max detection.
+    
+    Parameters
+    ----------
+    lambdas : array
+        Wavelength values in nm.
+    intensities : array
+        Intensity values.
+    refractive_index : scalar, scalar, optional
+        Value of the refractive index of the media.
+    min_peak_prominence : scalar, optional
+        Required prominence of peaks.
+    method : string
+        Either 'linreg' for linear regression or 'ransac'
+        for Randon Sampling Consensus.
+    debug : boolean
+        Show plots of peak detection and lin regression.
+    
+    Returns
+    -------
+    thickness : scalar
+        Thickness value in nm.
+    """
+    min_peak_distance = 10
+     
+    peaks_max, _ = find_peaks(intensities, prominence=min_peak_prominence, distance=min_peak_distance)
+    peaks_min, _ = find_peaks(-intensities, prominence=min_peak_prominence, distance=min_peak_distance)
+    peaks = np.concatenate((peaks_min, peaks_max))
+    peaks.sort()
+    
+    k_values = np.arange(len(1/lambdas[peaks]))
+    
+    if k_values.size < 2:
+        # Can't fit if less than two points.
+        return np.nan
+    
+    
+    if method.lower() == 'ransac':
+        residual_threshold = 4e-5
+
+        data = np.column_stack([k_values, 1/lambdas[peaks][::-1]])
+        model_robust, inliers = ransac(data, LineModelND, min_samples=2,
+                                       residual_threshold=residual_threshold, 
+                                       max_trials=100)
+        outliers = (inliers == False)
+
+        slope = model_robust.params[1][1]
+    
+        if debug:
+            fig, ax = plt.subplots(ncols=2, figsize=(15,6))
+
+            ax[0].set_xlabel('lambda')
+            ax[0].set_ylabel('Intensity')
+            ax[0].plot(lambdas, intensities)
+            ax[0].plot(lambdas[peaks_min], intensities[peaks_min], "s")
+            ax[0].plot(lambdas[peaks_max], intensities[peaks_max], "o")
+            
+            ax[1].set_xlabel('1 / lambda')
+            ax[1].set_ylabel('min & max')
+            ax[1].plot(data[inliers, 0], data[inliers, 1], 'xb', alpha=0.6, label='Inlier data')
+            ax[1].plot(data[outliers, 0], data[outliers, 1], '+r', alpha=0.6, label='Outlier data')
+            ax[1].plot(k_values, model_robust.predict_y(k_values), '-g', label='Robust line model')
+
+            plt.legend(loc='lower right')
+            plt.show()
+    
+    
+    
+    elif method.lower() == 'linreg':
+        slope, intercept, r_value, p_value, std_err = stats.linregress(k_values,
+                                                                       1/lambdas[peaks][::-1])
+    
+    
+        if debug:
+            fig, axes = plt.subplots(ncols=2, figsize=(15,6))
+            ax = axes.ravel()
+        
+            ax[0].set_xlabel('lambda')
+            ax[0].set_ylabel('Intensity')
+            ax[0].plot(lambdas, intensities)
+            ax[0].plot(lambdas[peaks_min], intensities[peaks_min], "s")
+            ax[0].plot(lambdas[peaks_max], intensities[peaks_max], "o")
+        
+        
+            ax[1].set_xlabel('1 / lambda')
+            ax[1].set_ylabel('min & max')
+            ax[1].plot(1 / lambdas[peaks][::-1], 's')
+            ax[1].plot(k_values, intercept + k_values * slope)
+            plt.show()
+    
+    else:
+        raise ValueError('Wrong method')
+ 
+    
+    thickness_minmax = 1 / slope / refractive_index / 4
+      
+    return thickness_minmax
