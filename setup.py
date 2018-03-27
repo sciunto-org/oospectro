@@ -1,8 +1,16 @@
 from setuptools import setup
 
+
+with open('oospectro/__init__.py') as fid:
+    for line in fid:
+        if line.startswith('__version__'):
+            VERSION = line.strip().split()[-1][1:-1]
+            break
+
+
 setup(
     name='oospectro',
-    version='devel',
+    version=VERSION,
     url='https://github.com/sciunto-org/oospectro',
     maintainer='F. Boulogne',
     maintainer_email='devel@sciunto.org',
