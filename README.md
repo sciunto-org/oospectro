@@ -7,25 +7,11 @@ Get thicknesses from Ocean Optics spectra.
 
 ## Dependencies
 
-Case 1:
-
 * numpy
-* scipy < 1.1.0
+* scipy
 * cython
 * matplotlib
 
-
-Case 2:
-
-* numpy
-* scipy >= 1.1.0
-* matplotlib
-
-
-## Build
-
-Case 1:
-
-$ python setup.py build_ext --inplace
-
+Installing scipy >= 1.1.0 will provide better performances.
+If scipy < 1.1.0 is install, then a non-optimized copy of scipy algorithms is used internally.
 

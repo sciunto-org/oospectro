@@ -1,10 +1,15 @@
 import numpy as np
 from skimage.measure import ransac, LineModelND
 from scipy import stats
+
 try:
     from scipy.signal import find_peaks, peak_prominences
 except:
+    import warnings
+    warnings.warn("""Use find peaks algorithm with non-optimized performances.
+                  Consider using scipy >= 1.1.0 for better performances.""")
     from .third_party import find_peaks, peak_prominences
+
 import matplotlib.pyplot as plt
 
 def thickness_from_minmax(lambdas, intensities, refractive_index=1., min_peak_prominence=0.01,
