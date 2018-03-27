@@ -1,0 +1,8 @@
+__pycache__
+.backups
+oospectro.egg-info
+*.bak
+*.pyc
+.ipynb_checkpoints
+build/
+dist/
