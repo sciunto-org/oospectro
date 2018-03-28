@@ -4,7 +4,7 @@
    contain the root `toctree` directive.
 
 Welcome to oospectro's documentation!
-=================================
+=====================================
 :Author: François Boulogne
 :Devel: `project <https://github.com/sciunto-org/oospectro>`_
 :Mirror:
