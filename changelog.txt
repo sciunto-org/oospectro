@@ -3,6 +3,7 @@
 
 * Fall back to scikit-image for ransac
 * Improved documentation
+* Add CI for unittests
 * General metadata enhancement
 
 
