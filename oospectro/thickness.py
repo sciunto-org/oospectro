@@ -1,5 +1,6 @@
 import numpy as np
-from sklearn import linear_model, datasets
+#from sklearn import linear_model, datasets
+from skimage.measure import ransac, LineModelND
 from scipy import stats
 
 try:
@@ -55,32 +56,34 @@ def thickness_from_minmax(lambdas, intensities, refractive_index=1., min_peak_pr
 
     if method.lower() == 'ransac':
         residual_threshold = 4e-5
+        min_samples = 2
         # Scikit-image
-        #from skimage.measure import ransac, LineModelND
-        #data = np.column_stack([k_values, 1/lambdas[peaks][::-1]])
-        #model_robust, inliers = ransac(data, LineModelND, min_samples=2,
-        #                               residual_threshold=residual_threshold,
-        #                               max_trials=100)
-        #outliers = (inliers == False)
-        #slope = model_robust.params[1][1]
+        data = np.column_stack([k_values, 1/lambdas[peaks][::-1]])
+        model_robust, inliers = ransac(data, LineModelND, min_samples=min_samples,
+                                       residual_threshold=residual_threshold,
+                                       max_trials=100)
+        outliers = (inliers == False)
+        slope = model_robust.params[1][1]
 
-        X, y = k_values.reshape(-1, 1), 1/lambdas[peaks][::-1]
+        # Scikit-learn
+        #X, y = k_values.reshape(-1, 1), 1/lambdas[peaks][::-1]
 
-        # Fit line using all data
-        lr = linear_model.LinearRegression()
-        lr.fit(X, y)
+        ## Fit line using all data
+        #lr = linear_model.LinearRegression()
+        #lr.fit(X, y)
 
-        slransac = linear_model.RANSACRegressor(residual_threshold=residual_threshold)
-        slransac.fit(X, y)
-        inlier_mask = slransac.inlier_mask_
-        outlier_mask = np.logical_not(inlier_mask)
+        #slransac = linear_model.RANSACRegressor(min_samples=min_samples,
+        #                                        residual_threshold=residual_threshold)
+        #slransac.fit(X, y)
+        #inlier_mask = slransac.inlier_mask_
+        #outlier_mask = np.logical_not(inlier_mask)
 
-        # Predict data of estimated models
-        line_X = np.arange(X.min(), X.max())[:, np.newaxis]
-        line_y = lr.predict(line_X)
-        line_y_ransac = slransac.predict(line_X)
+        ## Predict data of estimated models
+        #line_X = np.arange(X.min(), X.max())[:, np.newaxis]
+        #line_y = lr.predict(line_X)
+        #line_y_ransac = slransac.predict(line_X)
 
-        slope = slransac.estimator_.coef_[0]
+        #slope = slransac.estimator_.coef_[0]
 
         if debug:
             fig, ax = plt.subplots(ncols=2, figsize=(15,6))

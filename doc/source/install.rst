@@ -14,7 +14,7 @@ Note about dependencies
 
 * numpy
 * scipy
-* scikit-learn
+* scikit-image
 * matplotlib
 
 Installing scipy >= 1.1.0 will provide better performances.
