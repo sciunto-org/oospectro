@@ -21,5 +21,5 @@ setup(
     description='A library that calculates thicknesses from ocean optics spectra.',
     packages=['oospectro',],
     provides=['oospectro',],
-    install_requires = ['numpy', 'scipy', 'matplotlib', 'scikit-learn']
+    install_requires = ['numpy', 'scipy', 'matplotlib', 'scikit-image']
     )
