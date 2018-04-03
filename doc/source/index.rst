@@ -7,7 +7,6 @@ Welcome to oospectro's documentation!
 =====================================
 :Author: François Boulogne
 :Devel: `project <https://github.com/sciunto-org/oospectro>`_
-:Mirror:
 :Bugs: `github <https://github.com/sciunto-org/oospectro/issues>`_
 :Generated: |today|
 :License: BSD
@@ -19,7 +18,6 @@ Contents:
 
    introduction.rst
    api.rst
-   full_api.rst
 
 
 
