@@ -24,7 +24,7 @@ def thickness_from_minmax(lambdas, intensities, refractive_index=1., min_peak_pr
         Wavelength values in nm.
     intensities : array
         Intensity values.
-    refractive_index : scalar, scalar, optional
+    refractive_index : scalar, optional
         Value of the refractive index of the media.
     min_peak_prominence : scalar, optional
         Required prominence of peaks.
