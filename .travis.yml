@@ -22,7 +22,7 @@ install:
 script:
   - nosetests --with-coverage  --cover-erase --cover-package=oospectro
   - if [[ $TEST_SUITE == suite_3_6 ]]; then
-        cd docs;
+        cd doc;
         make html;
     fi;
 
