@@ -1,6 +1,10 @@
 0.2 - 
 ================
 
+* Fall back to scikit-image for ransac
+* Improved documentation
+* General metadata enhancement
+
 
 0.1 - 2018-04-03
 ================
