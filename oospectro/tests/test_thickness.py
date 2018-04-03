@@ -12,7 +12,8 @@ from spectra import known_values
 
 def test_sample1():
     min_peak_prominence = 0.02
-    for name, value in known_values.known_thicknesses.items():
+    index = known_values.sample1['refractive_index']
+    for name, value in known_values.sample1['known_thicknesses'].items():
         skipped = ('sample1/011137.xy',
                    'sample1/012426.xy',
                    'sample1/012795.xy',
@@ -22,7 +23,7 @@ def test_sample1():
             continue
         path = os.path.join('spectra', name)
         lambdas, intensities = io.load_spectrum(path, lambda_min=450)
-        result = thickness_from_minmax(lambdas, intensities, refractive_index=1.33,
+        result = thickness_from_minmax(lambdas, intensities, refractive_index=index,
                                        min_peak_prominence=min_peak_prominence,
                                        method='ransac', debug=False)
         error = 100 * np.abs(result - value) / value
