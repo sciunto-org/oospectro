@@ -15,6 +15,8 @@ setup(
     maintainer='F. Boulogne',
     maintainer_email='devel@sciunto.org',
     license='BSD',
+    long_description=open('README.md').read(),
+    include_package_data=True,
     platforms=['all'],
     description='A library that calculates thicknesses from ocean optics spectra.',
     packages=['oospectro',],
