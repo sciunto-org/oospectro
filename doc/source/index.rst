@@ -19,6 +19,7 @@ Contents:
    introduction.rst
    install.rst
    api.rst
+   thanks.rst
 
 
 
