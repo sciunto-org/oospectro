@@ -15,6 +15,7 @@ install:
   - pip install coverage
   - pip install -r requirements.txt
   - if [[ $TEST_SUITE == dev_scipy ]]; then
+        pip install cython;
         pip install git+https://github.com/scipy/scipy.git;
     fi;
   - python setup.py install
