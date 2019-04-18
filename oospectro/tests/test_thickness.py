@@ -26,5 +26,5 @@ def test_sample1():
         result = thickness_from_minmax(lambdas, intensities, refractive_index=index,
                                        min_peak_prominence=min_peak_prominence,
                                        method='ransac', debug=False)
-        error = 100 * np.abs(result - value) / value
+        error = 100 * np.abs(result.thickness - value) / value
         assert(error < 20)

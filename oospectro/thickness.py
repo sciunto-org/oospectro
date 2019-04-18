@@ -14,6 +14,35 @@ except:
 import matplotlib.pyplot as plt
 
 
+class OptimizeResult(dict):
+    """ Represents the optimization result.
+
+    Notes
+    -----
+    This class has been copied from scipy.optimize
+
+    """
+    def __getattr__(self, name):
+        try:
+            return self[name]
+        except KeyError:
+            raise AttributeError(name)
+
+    __setattr__ = dict.__setitem__
+    __delattr__ = dict.__delitem__
+
+    def __repr__(self):
+        if self.keys():
+            m = max(map(len, list(self.keys()))) + 1
+            return '\n'.join([k.rjust(m) + ': ' + repr(v)
+                              for k, v in sorted(self.items())])
+        else:
+            return self.__class__.__name__ + "()"
+
+    def __dir__(self):
+        return list(self.keys())
+
+
 def thickness_from_minmax(lambdas, intensities, refractive_index=1., min_peak_prominence=0.01,
                           method='linreg', debug=False):
     """
@@ -37,8 +66,8 @@ def thickness_from_minmax(lambdas, intensities, refractive_index=1., min_peak_pr
 
     Returns
     -------
-    thickness : scalar
-        Thickness value in nm.
+    results : Instance of `OptimizeResult` class.
+        The attribute `thickness` gives the thickness value in nm.
     """
     min_peak_distance = 10
 
@@ -64,6 +93,7 @@ def thickness_from_minmax(lambdas, intensities, refractive_index=1., min_peak_pr
                                        max_trials=100)
         outliers = (inliers == False)
         slope = model_robust.params[1][1]
+        thickness_minmax = 1 / slope / refractive_index / 4
 
         # Scikit-learn
         #X, y = k_values.reshape(-1, 1), 1/lambdas[peaks][::-1]
@@ -103,12 +133,17 @@ def thickness_from_minmax(lambdas, intensities, refractive_index=1., min_peak_pr
             plt.legend(loc='lower right')
             plt.show()
 
-
+        return OptimizeResult(thickness=thickness_minmax,
+                              num_inliers=len(inliers),
+                              num_outliers=len(outliers),
+                              )
 
     elif method.lower() == 'linreg':
         slope, intercept, r_value, p_value, std_err = stats.linregress(k_values,
                                                                        1/lambdas[peaks][::-1])
 
+
+        thickness_minmax = 1 / slope / refractive_index / 4
 
         if debug:
             fig, axes = plt.subplots(ncols=2, figsize=(15,6))
@@ -127,10 +162,11 @@ def thickness_from_minmax(lambdas, intensities, refractive_index=1., min_peak_pr
             ax[1].plot(k_values, intercept + k_values * slope)
             plt.show()
 
+        return OptimizeResult(thickness=thickness_minmax,
+                              stderr=stderr)
+
     else:
         raise ValueError('Wrong method')
 
 
-    thickness_minmax = 1 / slope / refractive_index / 4
 
-    return thickness_minmax
