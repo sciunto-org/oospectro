@@ -11,4 +11,7 @@ Example
                                    refractive_index=1.33,
                                    min_peak_prominence=0.02,
                                    method='ransac', debug=True)
-    print(result)
+    # result is a class with various attributes
+    # related to the algorithm outputs.
+    # Print the thickness
+    print(result.thickness)
