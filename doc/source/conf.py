@@ -62,7 +62,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'oospectro'
-copyright = '2016, F. Boulogne'
+copyright = '2017-2019, F. Boulogne'
 author = 'F. Boulogne'
 
 # The version info for the project you're documenting, acts as replacement for
