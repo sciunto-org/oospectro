@@ -134,8 +134,10 @@ def thickness_from_minmax(lambdas, intensities, refractive_index=1., min_peak_pr
             plt.show()
 
         return OptimizeResult(thickness=thickness_minmax,
-                              num_inliers=len(inliers),
-                              num_outliers=len(outliers),
+                              num_inliers=inliers.sum(),
+                              num_outliers=outliers.sum(),
+                              peaks_max=peaks_max,
+                              peaks_min=peaks_min,
                               )
 
     elif method.lower() == 'linreg':
@@ -163,6 +165,8 @@ def thickness_from_minmax(lambdas, intensities, refractive_index=1., min_peak_pr
             plt.show()
 
         return OptimizeResult(thickness=thickness_minmax,
+                              peaks_max=peaks_max,
+                              peaks_min=peaks_min,
                               stderr=stderr)
 
     else:
