@@ -58,10 +58,10 @@ def thickness_from_minmax(lambdas, intensities, refractive_index=1., min_peak_pr
         Value of the refractive index of the media.
     min_peak_prominence : scalar, optional
         Required prominence of peaks.
-    method : string
+    method : string, optional
         Either 'linreg' for linear regression or 'ransac'
         for Randon Sampling Consensus.
-    debug : boolean
+    debug : boolean, optional
         Show plots of peak detection and lin regression.
 
     Returns
