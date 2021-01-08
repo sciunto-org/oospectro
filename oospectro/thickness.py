@@ -2,14 +2,7 @@ import numpy as np
 #from sklearn import linear_model, datasets
 from skimage.measure import ransac, LineModelND
 from scipy import stats
-
-try:
-    from scipy.signal import find_peaks, peak_prominences
-except ImportError:
-    import warnings
-    warnings.warn("""Use find peaks algorithm with non-optimized performances.
-                  Consider using scipy >= 1.1.0 for better performances.""")
-    from .third_party import find_peaks, peak_prominences
+from scipy.signal import find_peaks
 
 import matplotlib.pyplot as plt
 
