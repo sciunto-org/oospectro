@@ -43,7 +43,8 @@ class OptimizeResult(dict):
         return list(self.keys())
 
 
-def thickness_from_minmax(lambdas, intensities, refractive_index=1., min_peak_prominence=0.01,
+def thickness_from_minmax(lambdas, intensities, refractive_index=1.,
+                          min_peak_prominence=0.01, min_peak_distance=10,
                           method='linreg', debug=False):
     """
     Return the thickness from a min-max detection.
@@ -58,6 +59,8 @@ def thickness_from_minmax(lambdas, intensities, refractive_index=1., min_peak_pr
         Value of the refractive index of the media.
     min_peak_prominence : scalar, optional
         Required prominence of peaks.
+    min_peak_distance : scalar, optional
+        Minimum distance between peaks.
     method : string, optional
         Either 'linreg' for linear regression or 'ransac'
         for Randon Sampling Consensus.
@@ -68,9 +71,13 @@ def thickness_from_minmax(lambdas, intensities, refractive_index=1., min_peak_pr
     -------
     results : Instance of `OptimizeResult` class.
         The attribute `thickness` gives the thickness value in nm.
-    """
-    min_peak_distance = 10
 
+    Notes
+    -----
+    For more details about `min_peak_prominence` and `min_peak_distance`,
+    see the documentation of `scipy.signal.find_peaks`. This function
+    is used to find extrema.
+    """
     peaks_max, _ = find_peaks(intensities, prominence=min_peak_prominence, distance=min_peak_distance)
     peaks_min, _ = find_peaks(-intensities, prominence=min_peak_prominence, distance=min_peak_distance)
     peaks = np.concatenate((peaks_min, peaks_max))
@@ -171,6 +178,3 @@ def thickness_from_minmax(lambdas, intensities, refractive_index=1., min_peak_pr
 
     else:
         raise ValueError('Wrong method')
-
-
-
