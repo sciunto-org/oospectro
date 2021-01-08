@@ -5,7 +5,7 @@ from scipy import stats
 
 try:
     from scipy.signal import find_peaks, peak_prominences
-except:
+except ImportError:
     import warnings
     warnings.warn("""Use find peaks algorithm with non-optimized performances.
                   Consider using scipy >= 1.1.0 for better performances.""")
@@ -89,7 +89,6 @@ def thickness_from_minmax(lambdas, intensities, refractive_index=1.,
         # Can't fit if less than two points.
         return np.nan
 
-
     if method.lower() == 'ransac':
         residual_threshold = 4e-5
         min_samples = 2
@@ -123,7 +122,7 @@ def thickness_from_minmax(lambdas, intensities, refractive_index=1.,
         #slope = slransac.estimator_.coef_[0]
 
         if debug:
-            fig, ax = plt.subplots(ncols=2, figsize=(15,6))
+            fig, ax = plt.subplots(ncols=2, figsize=(15, 6))
 
             ax[0].set_xlabel('lambda')
             ax[0].set_ylabel('Intensity')
@@ -151,11 +150,10 @@ def thickness_from_minmax(lambdas, intensities, refractive_index=1.,
         slope, intercept, r_value, p_value, std_err = stats.linregress(k_values,
                                                                        1/lambdas[peaks][::-1])
 
-
         thickness_minmax = 1 / slope / refractive_index / 4
 
         if debug:
-            fig, axes = plt.subplots(ncols=2, figsize=(15,6))
+            fig, axes = plt.subplots(ncols=2, figsize=(15, 6))
             ax = axes.ravel()
 
             ax[0].set_xlabel('lambda')
@@ -163,7 +161,6 @@ def thickness_from_minmax(lambdas, intensities, refractive_index=1.,
             ax[0].plot(lambdas, intensities)
             ax[0].plot(lambdas[peaks_min], intensities[peaks_min], "s")
             ax[0].plot(lambdas[peaks_max], intensities[peaks_max], "o")
-
 
             ax[1].set_xlabel('1 / lambda')
             ax[1].set_ylabel('min & max')
@@ -174,7 +171,7 @@ def thickness_from_minmax(lambdas, intensities, refractive_index=1.,
         return OptimizeResult(thickness=thickness_minmax,
                               peaks_max=peaks_max,
                               peaks_min=peaks_min,
-                              stderr=stderr)
+                              stderr=std_err)
 
     else:
         raise ValueError('Wrong method')
