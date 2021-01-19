@@ -1,4 +1,4 @@
-0.4 -
+0.4.0 -
 ================
 
 * Add option min_distance to `thickness_from_minmax`.
