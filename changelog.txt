@@ -4,6 +4,7 @@
 * Add option min_distance to `thickness_from_minmax`.
 * Enhance documentation
 * Remove support for scipy<1.1.0
+* Add delimiter option on io
 
 0.3 - 2018-04-20
 ================
