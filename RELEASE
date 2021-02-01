@@ -4,6 +4,7 @@ How to release
 * Update CHANGELOG
 * Update version in __init__.py
 * git tag -a 'vX'
+* git push --tag upstream master
 * pip install twine
 * python setup.py sdist
 * twine upload dist/*
