@@ -18,7 +18,7 @@ Example
 
 
 
-Large thicknesses can be determined by FFT (requires numerous oscillations)
+Large thicknesses can be determined by FFT (requires a large amount of oscillations)
 
 .. code-block:: python
 
