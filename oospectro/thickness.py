@@ -51,7 +51,7 @@ def thickness_from_minmax(lambdas, intensities, refractive_index=1.,
     intensities : array
         Intensity values.
     refractive_index : scalar, optional
-        Value of the refractive index of the media.
+        Value of the refractive index of the medium.
     min_peak_prominence : scalar, optional
         Required prominence of peaks.
     min_peak_distance : scalar, optional
@@ -186,12 +186,12 @@ def thickness_from_fft(lambdas, intensities,
     intensities : array
         Intensity values.
     refractive_index : scalar, optional
-        Value of the refractive index of the media.
+        Value of the refractive index of the medium.
     num_half_space : scalar, optional
         Number of points to compute FFT's half space.
         If `None`, default corresponds to `10*len(lambdas)`.
     debug : boolean, optional
-        Show plots of peak detection and lin regression.
+        Show plot of the transformed signal and the peak detection.
 
     Returns
     -------
