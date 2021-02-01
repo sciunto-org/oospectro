@@ -15,9 +15,6 @@ Note about dependencies
 -----------------------
 
 * numpy
-* scipy
+* scipy >= 1.1.0
 * scikit-image
 * matplotlib
-
-Installing scipy >= 1.1.0 will provide better performances.
-If scipy < 1.1.0 is install, then a non-optimized copy of scipy algorithms is used internally.
