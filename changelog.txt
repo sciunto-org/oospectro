@@ -1,6 +1,7 @@
 0.4.0 -
 ================
 
+* NEW: add thickness_from_fft, determine thicknesses by FFT.
 * Add option min_distance to `thickness_from_minmax`.
 * Enhance documentation
 * Remove support for scipy<1.1.0

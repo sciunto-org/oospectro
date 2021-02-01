@@ -3,6 +3,8 @@ import numpy as np
 from skimage.measure import ransac, LineModelND
 from scipy import stats
 from scipy.signal import find_peaks
+from scipy.interpolate import interp1d
+from scipy.fftpack import fft, fftfreq
 
 import matplotlib.pyplot as plt
 
@@ -49,7 +51,7 @@ def thickness_from_minmax(lambdas, intensities, refractive_index=1.,
     intensities : array
         Intensity values.
     refractive_index : scalar, optional
-        Value of the refractive index of the media.
+        Value of the refractive index of the medium.
     min_peak_prominence : scalar, optional
         Required prominence of peaks.
     min_peak_distance : scalar, optional
@@ -168,3 +170,67 @@ def thickness_from_minmax(lambdas, intensities, refractive_index=1.,
 
     else:
         raise ValueError('Wrong method')
+
+
+def thickness_from_fft(lambdas, intensities,
+                       refractive_index=1.,
+                       num_half_space=None,
+                       debug=False):
+    """
+    Determine the tickness by Fast Fourier Transform.
+
+    Parameters
+    ----------
+    lambdas : array
+        Wavelength values in nm.
+    intensities : array
+        Intensity values.
+    refractive_index : scalar, optional
+        Value of the refractive index of the medium.
+    num_half_space : scalar, optional
+        Number of points to compute FFT's half space.
+        If `None`, default corresponds to `10*len(lambdas)`.
+    debug : boolean, optional
+        Show plot of the transformed signal and the peak detection.
+
+    Returns
+    -------
+    results : Instance of `OptimizeResult` class.
+        The attribute `thickness` gives the thickness value in nm.
+    """
+    if num_half_space is None:
+        num_half_space = 10 * len(lambdas)
+
+    # FFT requires evenly spaced data.
+    # So, we interpolate the signal.
+    # Interpolate to get a linear increase of 1 / lambdas.
+    inverse_lambdas = 1 / lambdas
+    f = interp1d(inverse_lambdas, intensities)
+
+    inverse_lambdas_linspace = np.linspace(inverse_lambdas[0],
+                                           inverse_lambdas[-1],
+                                           2*num_half_space)
+    intensities_linspace = f(inverse_lambdas_linspace)
+
+    # Perform FFT
+    density = (inverse_lambdas[-1]-inverse_lambdas[0]) / (2*num_half_space)
+    inverse_lambdas_fft = fftfreq(2*num_half_space, density)
+    intensities_fft = fft(intensities_linspace)
+
+    # The FFT is symetrical over [0:N] and [N:2N].
+    # Keep over [N:2N], ie for positive freq.
+    intensities_fft = intensities_fft[num_half_space:2*num_half_space]
+    inverse_lambdas_fft = inverse_lambdas_fft[num_half_space:2*num_half_space]
+
+    idx_max_fft = np.argmax(abs(intensities_fft))
+    freq_max = inverse_lambdas_fft[idx_max_fft]
+    thickness_fft = freq_max / 2. / refractive_index
+
+    if debug:
+        plt.loglog(inverse_lambdas_fft, np.abs(intensities_fft))
+        plt.loglog(freq_max, np.abs(intensities_fft[idx_max_fft]), 'o')
+        plt.xlabel('Frequency')
+        plt.ylabel('FFT(Intensity)')
+        plt.title(f'Thickness={thickness_fft:.2f}')
+
+    return OptimizeResult(thickness=thickness_fft,)
