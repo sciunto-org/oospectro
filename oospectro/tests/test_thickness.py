@@ -43,4 +43,4 @@ def test_fft_sample1():
         lambdas, intensities = io.load_spectrum(path, lambda_min=450)
         result = thickness_from_fft(lambdas, intensities, refractive_index=index,)
         error = 100 * np.abs(result.thickness - value) / value
-        assert(error < 20)
+        assert(error < 2)
