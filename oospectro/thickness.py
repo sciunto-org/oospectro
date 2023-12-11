@@ -125,8 +125,8 @@ def thickness_from_minmax(lambdas, intensities, refractive_index=1.,
             ax[0].plot(lambdas[peaks_min], intensities[peaks_min], "s")
             ax[0].plot(lambdas[peaks_max], intensities[peaks_max], "o")
 
-            ax[1].set_xlabel('1 / lambda')
-            ax[1].set_ylabel('min & max')
+            ax[1].set_xlabel('Peak index')
+            ax[1].set_ylabel('1 / lambda')
             ax[1].plot(data[inliers, 0], data[inliers, 1], 'xb', alpha=0.6, label='Inlier data')
             ax[1].plot(data[outliers, 0], data[outliers, 1], '+r', alpha=0.6, label='Outlier data')
             ax[1].plot(k_values, model_robust.predict_y(k_values), '-g', label='Robust line model')
