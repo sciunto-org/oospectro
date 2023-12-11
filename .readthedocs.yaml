@@ -1,19 +1,15 @@
-# .readthedocs.yaml
-# Read the Docs configuration file
-# See https://docs.readthedocs.io/en/stable/config-file/v2.html for details
-
-# Required
 version: 2
 
-# Set the version of Python and other tools you might need
+# Set the version of Python and OS
 build:
   os: ubuntu-22.04
   tools:
-    python: "3.10"
-  commands:
-    - pip install numpydoc
-    - make html
+    python: "3.11"
 
-# Build documentation in the docs/ directory with Sphinx
-sphinx:
-    configuration: doc/source/conf.py
+python:
+  # make sure joblib is installed in the virtualenv (it is imported in
+  # conf.py)
+  install:
+    - requirements: .readthedocs-requirements.txt
+    - method: pip
+      path: .
