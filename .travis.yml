@@ -2,25 +2,18 @@ dist: trusty
 language: python
 matrix:
   include:
-    - python: "3.5"
-      env: TEST_SUITE=suite_3_5
-    - python: "3.6"
-      env: TEST_SUITE=suite_3_6
+    - python: "3.10"
+      env: TEST_SUITE=suite_3_10
 install:
-  - if [[ $TEST_SUITE == suite_3_6 ]]; then
+  - if [[ $TEST_SUITE == suite_3_10 ]]; then
         pip install sphinx;
     fi;
   - pip install coverage
   - pip install -r requirements.txt
-  - if [[ $TEST_SUITE == dev_scipy ]]; then
-        sudo apt install liblapack-dev gfortran;
-        pip install cython;
-        pip install git+https://github.com/scipy/scipy.git;
-    fi;
   - python setup.py install
 script:
   - nosetests --with-coverage  --cover-erase --cover-package=oospectro
-  - if [[ $TEST_SUITE == suite_3_6 ]]; then
+  - if [[ $TEST_SUITE == suite_3_10 ]]; then
         cd doc;
         make html;
     fi;
